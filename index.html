@@ -5,469 +5,1248 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mining & Plant Operations MIS Report</title>
     <style>
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background: #f5f7fa;
+            background-color: #f5f7fa;
             color: #333;
-            line-height: 1.5;
-            padding: 20px;
+            line-height: 1.6;
         }
-
-        .report-section {
-            margin: 0 auto 60px;
-            max-width: 1400px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            padding: 30px;
-        }
-
-        /* Navigation */
-        .report-navigation {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            gap: 12px;
-        }
-
-        .nav-btn {
-            padding: 10px 18px;
-            background: #007bff;
+        
+        /* Header and Navigation */
+        .main-header {
+            background: linear-gradient(135deg, #1a3c5e 0%, #2c3e50 100%);
             color: white;
-            border: none;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .main-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .report-date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .report-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .nav-btn {
+            padding: 0.6rem 1.2rem;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
+            transition: all 0.3s ease;
         }
-
+        
         .nav-btn:hover {
-            background: #0056b3;
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
         }
-
-        h1 {
-            font-size: 28px;
+        
+        .nav-btn.active {
+            background: #3498db;
+            border-color: #3498db;
+        }
+        
+        /* Report Container */
+        .report-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        /* Report Sections */
+        .report-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e1e5eb;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
             color: #1a3c5e;
-            margin-bottom: 30px;
-            text-align: center;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 2px solid #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-
-        h2.section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+        
+        .section-title span {
+            font-size: 1.2rem;
         }
-
-        table {
+        
+        /* Tables */
+        .data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
-            margin-bottom: 20px;
+            margin-top: 0.5rem;
         }
-
-        th, td {
-            padding: 12px 14px;
+        
+        .data-table th {
+            background-color: #f8f9fa;
             text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: #f8f9fa;
+            padding: 0.8rem;
             font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #dee2e6;
         }
-
+        
+        .data-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
         .text-right {
             text-align: right;
         }
-
-        .total-row {
-            font-weight: bold;
-            background: #f0f7ff;
-        }
-
-        .value-ftd { color: #007bff; font-weight: bold; }
-        .value-mtd { color: #28a745; font-weight: bold; }
-        .value-variance { color: #dc3545; font-weight: bold; }
-        .highlight-red { color: #dc3545; font-weight: bold; }
-        .highlight-green { color: #28a745; font-weight: bold; }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-        }
-
-        .dashboard-box {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid #e0e6ef;
-        }
-
-        .metric-item {
+        
+        .text-center {
             text-align: center;
-            padding: 20px;
-            background: #f8fdff;
-            border-radius: 10px;
-            border: 1px solid #d6eaf8;
         }
-
+        
+        /* Metrics and Highlights */
         .metric-value {
-            font-size: 32px;
-            font-weight: 800;
-            margin: 10px 0;
+            font-weight: 700;
+            font-size: 1.1rem;
         }
-
-        .metric-title {
-            font-size: 18px;
-            color: #495057;
+        
+        .ftd-value {
+            color: #3498db;
         }
-
+        
+        .mtd-value {
+            color: #27ae60;
+        }
+        
+        .highlight-red {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .highlight-green {
+            color: #27ae60;
+            font-weight: 600;
+        }
+        
+        /* Status Badges */
         .status-badge {
             display: inline-block;
-            padding: 6px 12px;
+            padding: 0.25rem 0.6rem;
             border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 600;
-            font-size: 13px;
         }
-
-        .status-good { background: #d4edda; color: #155724; }
-        .status-warning { background: #fff3cd; color: #856404; }
-        .status-critical { background: #f8d7da; color: #721c24; }
-
-        .buttons-row {
+        
+        .status-good {
+            background-color: #d5f4e6;
+            color: #27ae60;
+        }
+        
+        .status-warning {
+            background-color: #fef9e7;
+            color: #f39c12;
+        }
+        
+        .status-critical {
+            background-color: #fdedec;
+            color: #e74c3c;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
             justify-content: center;
-            margin-top: 40px;
         }
-
+        
         .action-btn {
-            padding: 10px 20px;
-            background: #007bff;
+            padding: 0.6rem 1.2rem;
+            background: #3498db;
             color: white;
             border: none;
             border-radius: 6px;
+            cursor: pointer;
             font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+        
+        .action-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #dee2e6;
+            margin-top: 2rem;
+        }
+        
+        /* Grid Layouts */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .plant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-grid,
+            .plant-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-table {
+                font-size: 0.9rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 0.6rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .action-btn {
+                min-width: 120px;
+                padding: 0.5rem 1rem;
+            }
+            
+            .report-navigation {
+                flex-wrap: wrap;
+            }
+        }
+        
+        /* Utility Classes */
+        .total-row {
+            font-weight: 700;
+            background-color: #f0f7ff;
+        }
+        
+        .clickable {
             cursor: pointer;
         }
-
-        .action-btn:hover {
-            background: #0056b3;
+        
+        .metric-card {
+            background: linear-gradient(135deg, #f8fdff 0%, #f0f8ff 100%);
+            border-radius: 10px;
+            padding: 1.2rem;
+            border: 1px solid #d6eaf8;
+            text-align: center;
         }
-
-        .floating-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #28a745;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            text-decoration: none;
+        
+        .metric-card-title {
+            font-weight: 600;
+            color: #1a3c5e;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
         }
-
-        @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            table { font-size: 13px; }
-            th, td { padding: 10px; }
+        
+        .metric-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .metric-card-label {
+            font-size: 0.9rem;
+            color: #6c757d;
         }
     </style>
 </head>
 <body>
-
-    <!-- Navigation -->
-    <div class="report-navigation">
-        <button class="nav-btn" onclick="document.getElementById('mining-report').scrollIntoView({behavior:'smooth'})">Mining Report</button>
-        <button class="nav-btn" onclick="document.getElementById('plant-report').scrollIntoView({behavior:'smooth'})">Plant Report</button>
-    </div>
-
-    <!-- Mining Report -->
-    <div class="report-section" id="mining-report">
-        <h1>Maximizing Boulder Transport - 25/01/2026</h1>
-
-        <div class="dashboard-grid">
-            <!-- Performance -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Target: 17 Compressors & 1000 Holes</h2>
-                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
-                    <div class="metric-item">
-                        <div class="metric-title">Compressors</div>
-                        <div class="metric-value value-ftd">12 <small>FTD</small></div>
-                        <div>Variance: <span class="value-variance">-5</span></div>
-                        <div class="metric-value value-mtd">782 <small>MTD</small></div>
-                        <div>Variance: <span class="value-variance">-218</span></div>
+    <!-- Main Header -->
+    <header class="main-header">
+        <h1>Mining & Plant Operations MIS Report</h1>
+        <div class="report-date">Date: 25-27 January 2026</div>
+        
+        <div class="report-navigation">
+            <button class="nav-btn active" onclick="showReport('mining')">Mining Operations</button>
+            <button class="nav-btn" onclick="showReport('plant')">Plant Operations</button>
+        </div>
+    </header>
+    
+    <!-- Report Container -->
+    <div class="report-container">
+        <!-- Mining Operations Report (Default Visible) -->
+        <div id="mining-report" class="report-section">
+            <h2 class="section-title">Mining Operations - 25/01/2026</h2>
+            
+            <div class="dashboard-grid">
+                <!-- Performance Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Target: 17 Compressor & 1000 Holes</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="metric-card">
+                            <div class="metric-card-title">Compressors</div>
+                            <div class="metric-card-value ftd-value">12 <span class="metric-card-label">FTD</span></div>
+                            <div class="metric-card-label">Variance: <span class="highlight-red">-5</span></div>
+                            <div class="metric-card-value mtd-value">782 <span class="metric-card-label">MTD</span></div>
+                            <div class="metric-card-label">Variance: <span class="highlight-red">-218</span></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-card-title">Holes</div>
+                            <div class="metric-card-value ftd-value">635 <span class="metric-card-label">FTD</span></div>
+                            <div class="metric-card-label">Variance: <span class="highlight-red">-365</span></div>
+                            <div class="metric-card-value mtd-value">1782 <span class="metric-card-label">MTD</span></div>
+                            <div class="metric-card-label">Variance: <span class="highlight-red">-1231</span></div>
+                        </div>
                     </div>
-                    <div class="metric-item">
-                        <div class="metric-title">Holes</div>
-                        <div class="metric-value value-ftd">635 <small>FTD</small></div>
-                        <div>Variance: <span class="value-variance">-365</span></div>
-                        <div class="metric-value value-mtd">1782 <small>MTD</small></div>
-                        <div>Variance: <span class="value-variance">-1231</span></div>
+                </div>
+                
+                <!-- Running Hours Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Running Hours</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Operation Type</th>
+                                <th class="text-right">FTD</th>
+                                <th class="text-right">MTD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Quarry Run Hours</td>
+                                <td class="text-right"><span class="ftd-value">13.9</span></td>
+                                <td class="text-right">169.3</td>
+                            </tr>
+                            <tr>
+                                <td>Loading Hours</td>
+                                <td class="text-right"><span class="ftd-value">8.5</span></td>
+                                <td class="text-right">253.6</td>
+                            </tr>
+                            <tr>
+                                <td>Breaking Hours</td>
+                                <td class="text-right"><span class="ftd-value">6</span></td>
+                                <td class="text-right">143.7</td>
+                            </tr>
+                            <tr>
+                                <td>Development Hours</td>
+                                <td class="text-right"><span class="ftd-value">5.5</span></td>
+                                <td class="text-right">62.3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Loading Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Loading Start End Time</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th class="text-right">Tippers</th>
+                                <th class="text-right">Machinery</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>9:15 AM</td>
+                                <td>12:39 PM</td>
+                                <td class="text-right">7</td>
+                                <td class="text-right">3</td>
+                            </tr>
+                            <tr>
+                                <td>2:12 PM</td>
+                                <td>7:51 PM</td>
+                                <td class="text-right">10</td>
+                                <td class="text-right">4</td>
+                            </tr>
+                            <tr>
+                                <td>9:36 PM</td>
+                                <td>7:00 AM</td>
+                                <td class="text-right">5</td>
+                                <td class="text-right">2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1rem; padding: 1rem; background-color: #e8f4fc; border-radius: 6px; text-align: center;">
+                        <strong>FTD - 87 Trips & 2436 Mt Qty</strong>
+                    </div>
+                </div>
+                
+                <!-- Key Parameters Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Key Parameters</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-right">FTD</th>
+                                <th class="text-right">MTD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Compressors</td>
+                                <td class="text-right"><span class="ftd-value">12</span></td>
+                                <td class="text-right">245</td>
+                            </tr>
+                            <tr>
+                                <td>NMR</td>
+                                <td class="text-right"><span class="ftd-value">12</span></td>
+                                <td class="text-right">78</td>
+                            </tr>
+                            <tr>
+                                <td>Holes</td>
+                                <td class="text-right"><span class="ftd-value">850</span></td>
+                                <td class="text-right">15,800</td>
+                            </tr>
+                            <tr>
+                                <td>Feets</td>
+                                <td class="text-right"><span class="ftd-value">4,250</span></td>
+                                <td class="text-right">79,000</td>
+                            </tr>
+                            <tr>
+                                <td>Production</td>
+                                <td class="text-right"><span class="ftd-value">1,250</span></td>
+                                <td class="text-right">22,500</td>
+                            </tr>
+                            <tr>
+                                <td>Boulder transport Trips</td>
+                                <td class="text-right"><span class="ftd-value">45</span></td>
+                                <td class="text-right">11,52</td>
+                            </tr>
+                            <tr>
+                                <td>Boulder transport Qty</td>
+                                <td class="text-right"><span class="ftd-value">2,151</span></td>
+                                <td class="text-right">36,255</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Area Wise Compressor Status Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Area Wise Compressor Status</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Area</th>
+                                <th class="text-right">FTD</th>
+                                <th class="text-right">MTD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>9 Ha – Pit 3</td>
+                                <td class="text-right"><span class="ftd-value">5</span></td>
+                                <td class="text-right">105</td>
+                            </tr>
+                            <tr>
+                                <td>Bench 1</td>
+                                <td class="text-right"><span class="ftd-value">2</span></td>
+                                <td class="text-right">40</td>
+                            </tr>
+                            <tr>
+                                <td>Bench 2</td>
+                                <td class="text-right"><span class="ftd-value">2</span></td>
+                                <td class="text-right">38</td>
+                            </tr>
+                            <tr>
+                                <td>Bench 3</td>
+                                <td class="text-right">0</td>
+                                <td class="text-right">22</td>
+                            </tr>
+                            <tr>
+                                <td>Bench 4</td>
+                                <td class="text-right">0</td>
+                                <td class="text-right">20</td>
+                            </tr>
+                            <tr>
+                                <td>Pit-2</td>
+                                <td class="text-right"><span class="ftd-value">4</span></td>
+                                <td class="text-right">80</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total</td>
+                                <td class="text-right">12</td>
+                                <td class="text-right">245</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Machinery Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Machinery</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Machine</th>
+                                <th>HMR Open/Close</th>
+                                <th class="text-right">W.Hours</th>
+                                <th class="text-right">Diesel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SGX V - 1</td>
+                                <td>113.5 / 119.6</td>
+                                <td class="text-right">6.3</td>
+                                <td class="text-right">230 L</td>
+                            </tr>
+                            <tr>
+                                <td>SGX V - 2</td>
+                                <td>152.6 / 163.63</td>
+                                <td class="text-right">7.1</td>
+                                <td class="text-right">145 L</td>
+                            </tr>
+                            <tr>
+                                <td>Govinda - 1</td>
+                                <td>114.6 / 121.3</td>
+                                <td class="text-right">6.3</td>
+                                <td class="text-right">230 L</td>
+                            </tr>
+                            <tr>
+                                <td>Govinda - 2</td>
+                                <td>163.9 / 169.7</td>
+                                <td class="text-right">3.6</td>
+                                <td class="text-right">120 L</td>
+                            </tr>
+                            <tr>
+                                <td>Hyundai - rental</td>
+                                <td>152.6 / 163.63</td>
+                                <td class="text-right">4.6</td>
+                                <td class="text-right">45 L</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 1rem; padding: 0.8rem; background-color: #e8f6f3; border-radius: 6px; border-left: 4px solid #16a085;">
+                        <strong>Remark:</strong> All machinery operating within normal parameters. SGX V-2 showing optimal fuel efficiency.
                     </div>
                 </div>
             </div>
-
-            <!-- Running Hours -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Running Hours</h2>
-                <table>
-                    <thead>
-                        <tr><th>Operation Type</th><th class="text-right">FTD</th><th class="text-right">MTD</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Quarry Run Hours</td><td class="text-right value-ftd">13.9</td><td class="text-right">169.3</td></tr>
-                        <tr><td>Loading Hours</td><td class="text-right value-ftd">8.5</td><td class="text-right">253.6</td></tr>
-                        <tr><td>Breaking Hours</td><td class="text-right value-ftd">6</td><td class="text-right">143.7</td></tr>
-                        <tr><td>Development Hours</td><td class="text-right value-ftd">5.5</td><td class="text-right">62.3</td></tr>
-                    </tbody>
-                </table>
+            
+            <!-- Action Buttons for Mining Report -->
+            <div class="action-buttons">
+                <button class="action-btn" onclick="openModal('trial')">Trial Details</button>
+                <button class="action-btn" onclick="openModal('explosive')">Explosive Data</button>
+                <button class="action-btn" onclick="openModal('compressor')">Compressor</button>
+                <button class="action-btn" onclick="openModal('nmr')">NMR Payment</button>
+                <button class="action-btn" onclick="openModal('revenue')">Revenue Loss</button>
             </div>
-
-            <!-- Loading -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Loading Start/End Time</h2>
-                <table>
-                    <thead>
-                        <tr><th>Start Time</th><th>End Time</th><th class="text-right">Tippers</th><th class="text-right">Machinery</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>9:15 AM</td><td>12:39 PM</td><td class="text-right">7</td><td class="text-right">3</td></tr>
-                        <tr><td>2:12 PM</td><td>7:51 PM</td><td class="text-right">10</td><td class="text-right">4</td></tr>
-                        <tr><td>9:36 PM</td><td>7:00 AM</td><td class="text-right">5</td><td class="text-right">2</td></tr>
-                        <tr><td colspan="4" style="text-align:center; font-weight:bold; color:#007bff; padding:12px;">FTD: 87 Trips & 2436 Mt Qty</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Key Parameters -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Key Parameters</h2>
-                <table>
-                    <thead>
-                        <tr><th>Parameter</th><th class="text-right">FTD</th><th class="text-right">MTD</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Compressors</td><td class="text-right value-ftd">12</td><td class="text-right">245</td></tr>
-                        <tr><td>NMR</td><td class="text-right value-ftd">12</td><td class="text-right">78</td></tr>
-                        <tr><td>Holes</td><td class="text-right value-ftd">850</td><td class="text-right">15,800</td></tr>
-                        <tr><td>Feets</td><td class="text-right value-ftd">4,250</td><td class="text-right">79,000</td></tr>
-                        <tr><td>Production</td><td class="text-right value-ftd">1,250</td><td class="text-right">22,500</td></tr>
-                        <tr><td>Boulder Trips</td><td class="text-right value-ftd">45</td><td class="text-right">1,152</td></tr>
-                        <tr><td>Boulder Qty</td><td class="text-right value-ftd">2,151</td><td class="text-right">36,255</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Area Wise Compressor Status -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Area Wise Compressor Status</h2>
-                <table>
-                    <thead>
-                        <tr><th>Area</th><th class="text-right">FTD</th><th class="text-right">MTD</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>9 Ha – Pit 3</td><td class="text-right value-ftd">5</td><td class="text-right">105</td></tr>
-                        <tr><td>Bench 1</td><td class="text-right value-ftd">2</td><td class="text-right">40</td></tr>
-                        <tr><td>Bench 2</td><td class="text-right value-ftd">2</td><td class="text-right">38</td></tr>
-                        <tr><td>Bench 3</td><td class="text-right">0</td><td class="text-right">22</td></tr>
-                        <tr><td>Bench 4</td><td class="text-right">0</td><td class="text-right">20</td></tr>
-                        <tr><td>Pit-2</td><td class="text-right value-ftd">4</td><td class="text-right">80</td></tr>
-                        <tr class="total-row"><td>Total</td><td class="text-right">12</td><td class="text-right">245</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Machinery -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Machinery</h2>
-                <table>
-                    <thead>
-                        <tr><th>Machine</th><th>HMR Open/Close</th><th class="text-right">W.Hours</th><th class="text-right">Diesel</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>SGX V - 1</td><td>113.5 / 119.6</td><td class="text-right">6.3</td><td class="text-right">230 L</td></tr>
-                        <tr><td>SGX V - 2</td><td>152.6 / 163.63</td><td class="text-right">7.1</td><td class="text-right">145 L</td></tr>
-                        <tr><td>Govinda - 1</td><td>114.6 / 121.3</td><td class="text-right">6.3</td><td class="text-right">230 L</td></tr>
-                        <tr><td>Govinda - 2</td><td>163.9 / 169.7</td><td class="text-right">3.6</td><td class="text-right">120 L</td></tr>
-                        <tr><td>Hyundai - rental</td><td>152.6 / 163.63</td><td class="text-right">4.6</td><td class="text-right">45 L</td></tr>
-                    </tbody>
-                </table>
-                <div style="margin-top:15px; padding:12px; background:#e6fffa; border-left:4px solid #20c997; border-radius:6px;">
-                    Remark: All machinery operating normally. SGX V-2 shows good fuel efficiency.
+        </div>
+        
+        <!-- Plant Operations Report (Hidden by Default) -->
+        <div id="plant-report" class="report-section" style="display: none;">
+            <h2 class="section-title">Plant Operations - 25-27/01/2026</h2>
+            
+            <div class="plant-grid">
+                <!-- Plant Operation Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Plant Operation</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Day Shift</th>
+                                <th>Night Shift</th>
+                                <th>Total FTD</th>
+                                <th>MTD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Production</td>
+                                <td>900</td>
+                                <td>965</td>
+                                <td>1865</td>
+                                <td>31987</td>
+                            </tr>
+                            <tr>
+                                <td>Running Hrs.</td>
+                                <td>5 Hr</td>
+                                <td>5.2 Hr</td>
+                                <td>10.2 Hr</td>
+                                <td>169.9 Hr</td>
+                            </tr>
+                            <tr>
+                                <td>TPH</td>
+                                <td colspan="2"></td>
+                                <td>183</td>
+                                <td>188</td>
+                            </tr>
+                            <tr>
+                                <td>Maintenance Hrs</td>
+                                <td>2</td>
+                                <td>1.5</td>
+                                <td>3.5</td>
+                                <td>64</td>
+                            </tr>
+                            <tr>
+                                <td>Breakdown Hrs.</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>Power Cut Hrs.</td>
+                                <td>1.8</td>
+                                <td>2</td>
+                                <td>3.8</td>
+                                <td>95.6</td>
+                            </tr>
+                            <tr>
+                                <td>Boulder Jam Hrs.</td>
+                                <td>0.2</td>
+                                <td>0.3</td>
+                                <td>0.5</td>
+                                <td>20.9</td>
+                            </tr>
+                            <tr>
+                                <td>No Feed Hrs.</td>
+                                <td>1</td>
+                                <td>1.5</td>
+                                <td>2.5</td>
+                                <td>34</td>
+                            </tr>
+                            <tr>
+                                <td>Remark</td>
+                                <td colspan="4"><span class="status-badge status-good">Operational</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Machinery Availability Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Machinery Availability</h3>
+                    <table class="data-table" style="margin-bottom: 1rem;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Tipper</th>
+                                <th>Machine</th>
+                                <th>Loader</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Day</td>
+                                <td>9</td>
+                                <td>4</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>Night</td>
+                                <td>10</td>
+                                <td>3</td>
+                                <td>1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: #3498db;">Plant Performance</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>FTD</th>
+                                <th>GAP</th>
+                                <th>MTD</th>
+                                <th>GAP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Plant Performance</td>
+                                <td>10.2 Hr</td>
+                                <td class="highlight-red">7.8</td>
+                                <td>169.9 Hr</td>
+                                <td class="highlight-red">56.1</td>
+                            </tr>
+                            <tr>
+                                <td>Plant TPH</td>
+                                <td>183</td>
+                                <td colspan="3">188 (MTD Avg)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <table class="data-table" style="margin-top: 1rem;">
+                        <tbody>
+                            <tr>
+                                <td>Boulder feed to plant</td>
+                                <td>74 Trips</td>
+                                <td>3,242 Mt</td>
+                            </tr>
+                            <tr>
+                                <td>Add to Stock</td>
+                                <td>16 Trips</td>
+                                <td>362 Mt</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Production Details Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Production Details</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>FTD</th>
+                                <th>MTD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10 MM</td>
+                                <td>381.6</td>
+                                <td>3722.4</td>
+                            </tr>
+                            <tr>
+                                <td>20 MM</td>
+                                <td>593.6</td>
+                                <td>5790.4</td>
+                            </tr>
+                            <tr>
+                                <td>V-Sand</td>
+                                <td>296.8</td>
+                                <td>2895.2</td>
+                            </tr>
+                            <tr>
+                                <td>Railway Ballast</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>40 MM</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Rivo Sand</td>
+                                <td>763.2</td>
+                                <td>7444.8</td>
+                            </tr>
+                            <tr>
+                                <td>Slurry</td>
+                                <td>84.8</td>
+                                <td>827.2</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total</td>
+                                <td>2120</td>
+                                <td>20680</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Boulder Transportation Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Boulder Transportation</h3>
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Vehicle</th>
+                                    <th>Day</th>
+                                    <th>Night</th>
+                                    <th>FTD Trips</th>
+                                    <th>FTD Tonnage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>AP39U00095</td>
+                                    <td>1</td>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <td>114.09</td>
+                                </tr>
+                                <tr>
+                                    <td>AP39U00097</td>
+                                    <td>3</td>
+                                    <td>3</td>
+                                    <td>6</td>
+                                    <td>129.69</td>
+                                </tr>
+                                <tr>
+                                    <td>AP39UW9880</td>
+                                    <td>4</td>
+                                    <td>7</td>
+                                    <td>11</td>
+                                    <td>240.71</td>
+                                </tr>
+                                <tr>
+                                    <td>AP39UW9881</td>
+                                    <td>4</td>
+                                    <td>6</td>
+                                    <td>10</td>
+                                    <td>223.22</td>
+                                </tr>
+                                <tr>
+                                    <td>AP39UW4651</td>
+                                    <td>4</td>
+                                    <td>6</td>
+                                    <td>10</td>
+                                    <td>225.9</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>Total (All Vehicles)</td>
+                                    <td>29</td>
+                                    <td>54</td>
+                                    <td>83</td>
+                                    <td>1890.31</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Hourly Tipper Movement Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Hourly Tipper Movement</h3>
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Day Time</th>
+                                    <th>Trips</th>
+                                    <th>Late</th>
+                                    <th>Night Time</th>
+                                    <th>Trips</th>
+                                    <th>Late</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>08 am - 09 am</td>
+                                    <td>2</td>
+                                    <td class="highlight-red">1</td>
+                                    <td>08 pm - 09 pm</td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>09 am - 10 am</td>
+                                    <td>2</td>
+                                    <td class="highlight-red">3</td>
+                                    <td>09 pm - 10 pm</td>
+                                    <td>4</td>
+                                    <td class="highlight-red">1</td>
+                                </tr>
+                                <tr>
+                                    <td>10 am - 11 am</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>10 pm - 11 pm</td>
+                                    <td>2</td>
+                                    <td class="highlight-red">1</td>
+                                </tr>
+                                <tr>
+                                    <td>11 am - 12 pm</td>
+                                    <td>4</td>
+                                    <td class="highlight-red">1</td>
+                                    <td>11 pm - 12 am</td>
+                                    <td>5</td>
+                                    <td class="highlight-red">2</td>
+                                </tr>
+                                <tr>
+                                    <td>12 pm - 01 pm</td>
+                                    <td>3</td>
+                                    <td>0</td>
+                                    <td>12 am - 01 am</td>
+                                    <td>1</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Godown Stock Card -->
+                <div class="report-section">
+                    <h3 class="section-title">Godown Stock</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10 MM</td>
+                                <td>80</td>
+                            </tr>
+                            <tr>
+                                <td>20 MM</td>
+                                <td>4100</td>
+                            </tr>
+                            <tr>
+                                <td>Rivo Sand</td>
+                                <td>20990</td>
+                            </tr>
+                            <tr>
+                                <td>Railway Ballast</td>
+                                <td>795</td>
+                            </tr>
+                            <tr>
+                                <td>40 MM</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>VSI</td>
+                                <td>18816</td>
+                            </tr>
+                            <tr>
+                                <td>GSB</td>
+                                <td>-</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Total</td>
+                                <td>44781</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4 style="margin: 1rem 0 0.5rem 0; color: #3498db;">Transportation Summary</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>FTD</th>
+                                <th>GAP</th>
+                                <th>MTD</th>
+                                <th>GAP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Trips</td>
+                                <td>83</td>
+                                <td class="highlight-red">36</td>
+                                <td>607</td>
+                                <td class="highlight-red">254</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Dispatch Details Card -->
+                <div class="report-section" style="grid-column: 1 / -1;">
+                    <h3 class="section-title">Dispatch Details - Date: 27-01-2026</h3>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Shift</th>
+                                    <th>10 MM</th>
+                                    <th>20 MM</th>
+                                    <th>V-Sand</th>
+                                    <th>P-Sand</th>
+                                    <th>Scalping</th>
+                                    <th>GSB / Wet Mix</th>
+                                    <th>40 MM</th>
+                                    <th>50 MM</th>
+                                    <th>R-Sand</th>
+                                    <th>Total (MT)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A-Shift</td>
+                                    <td>25</td>
+                                    <td>65</td>
+                                    <td>25</td>
+                                    <td>25</td>
+                                    <td>65</td>
+                                    <td>69</td>
+                                    <td>80</td>
+                                    <td>85</td>
+                                    <td>55</td>
+                                    <td>494</td>
+                                </tr>
+                                <tr>
+                                    <td>B-Shift</td>
+                                    <td>250</td>
+                                    <td>545</td>
+                                    <td>58</td>
+                                    <td>51</td>
+                                    <td>51</td>
+                                    <td>2365</td>
+                                    <td>255</td>
+                                    <td>55</td>
+                                    <td>5</td>
+                                    <td>3635</td>
+                                </tr>
+                                <tr class="total-row">
+                                    <td>A + B Total</td>
+                                    <td>275</td>
+                                    <td>610</td>
+                                    <td>83</td>
+                                    <td>76</td>
+                                    <td>116</td>
+                                    <td>2434</td>
+                                    <td>335</td>
+                                    <td>140</td>
+                                    <td>60</td>
+                                    <td>4129</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="buttons-row">
-            <button class="action-btn">Trial Details</button>
-            <button class="action-btn">Explosive Data</button>
-            <button class="action-btn">Compressor</button>
-            <button class="action-btn">NMR Payment</button>
-            <button class="action-btn">Revenue Loss</button>
+            
+            <!-- Action Buttons for Plant Report -->
+            <div class="action-buttons">
+                <button class="action-btn" onclick="openModal('plantDetails')">Plant Details</button>
+                <button class="action-btn" onclick="openModal('boulderReport')">Boulder Report</button>
+                <button class="action-btn" onclick="openModal('productionReport')">Production Report</button>
+                <button class="action-btn" onclick="openModal('dispatchReport')">Dispatch Report</button>
+            </div>
         </div>
     </div>
-
-    <!-- Plant Report -->
-    <div class="report-section" id="plant-report">
-        <h1>Plant Operations MIS Report - 27/01/2026</h1>
-
-        <div class="dashboard-grid">
-            <!-- Plant Operation -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Plant Operation</h2>
-                <table>
-                    <thead>
-                        <tr><th></th><th>Day Shift</th><th>Night Shift</th><th>Total FTD</th><th>MTD</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Production</td><td>900</td><td>965</td><td>1865</td><td>31,987</td></tr>
-                        <tr><td>Running Hrs.</td><td>5 Hr</td><td>5.2 Hr</td><td>10.2 Hr</td><td>169.9 Hr</td></tr>
-                        <tr><td>TPH</td><td colspan="2"></td><td>183</td><td>188</td></tr>
-                        <tr><td>Maintenance Hrs</td><td>2</td><td>1.5</td><td>3.5</td><td>64</td></tr>
-                        <tr><td>Breakdown Hrs.</td><td>0</td><td>0</td><td>0</td><td>6</td></tr>
-                        <tr><td>Power Cut Hrs.</td><td>1.8</td><td>2</td><td>3.8</td><td>95.6</td></tr>
-                        <tr><td>Boulder Jam Hrs.</td><td>0.2</td><td>0.3</td><td>0.5</td><td>20.9</td></tr>
-                        <tr><td>No Feed Hrs.</td><td>1</td><td>1.5</td><td>2.5</td><td>34</td></tr>
-                        <tr><td>Remark</td><td colspan="4"><span class="status-badge status-good">Operational</span></td></tr>
-                    </tbody>
-                </table>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Mining & Plant Operations MIS Report | Data as of 25-27 January 2026</p>
+        <p>© 2026 Operations Management System | Last Updated: 27/01/2026 18:45</p>
+    </footer>
+    
+    <!-- Modal Structure (Hidden by Default) -->
+    <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background-color: white; border-radius: 10px; padding: 2rem; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;">
+            <button onclick="closeModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">&times;</button>
+            <h2 id="modal-title" style="margin-bottom: 1.5rem; color: #1a3c5e;">Modal Title</h2>
+            <div id="modal-content">
+                <!-- Modal content will be inserted here -->
             </div>
-
-            <!-- Machinery Availability -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Machinery Availability</h2>
-                <table>
-                    <thead>
-                        <tr><th></th><th>Tipper</th><th>Machine</th><th>Loader</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>Day</td><td>9</td><td>4</td><td>2</td></tr>
-                        <tr><td>Night</td><td>10</td><td>3</td><td>1</td></tr>
-                    </tbody>
-                </table>
-
-                <h3 style="margin:20px 0 10px; color:#007bff;">Plant Performance</h3>
-                <table>
-                    <tbody>
-                        <tr><td>Plant Performance</td><td>10.2 Hr</td><td class="highlight-red">Gap: 7.8</td><td>169.9 Hr</td><td class="highlight-red">Gap: 56.1</td></tr>
-                        <tr><td>Plant TPH</td><td>183</td><td colspan="3">MTD Avg: 188</td></tr>
-                    </tbody>
-                </table>
-
-                <table style="margin-top:15px;">
-                    <tr><td>Boulder feed to plant</td><td>74 Trips</td><td>3,242 Mt</td></tr>
-                    <tr><td>Add to Stock</td><td>16 Trips</td><td>362 Mt</td></tr>
-                </table>
-            </div>
-
-            <!-- Production Details -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Production Details</h2>
-                <table>
-                    <thead>
-                        <tr><th>Product</th><th>FTD</th><th>MTD</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>10 MM</td><td>381.6</td><td>3,722.4</td></tr>
-                        <tr><td>20 MM</td><td>593.6</td><td>5,790.4</td></tr>
-                        <tr><td>V-Sand</td><td>296.8</td><td>2,895.2</td></tr>
-                        <tr><td>Railway Ballast</td><td>-</td><td>-</td></tr>
-                        <tr><td>40 MM</td><td>-</td><td>-</td></tr>
-                        <tr><td>Rivo Sand</td><td>763.2</td><td>7,444.8</td></tr>
-                        <tr><td>Slurry</td><td>84.8</td><td>827.2</td></tr>
-                        <tr class="total-row"><td>Total</td><td>2,120</td><td>20,680</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Boulder Transportation -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Boulder Transportation</h2>
-                <table>
-                    <thead>
-                        <tr><th>Vehicle</th><th>Day</th><th>Night</th><th>FTD Trips</th><th>MTD Trips</th><th>FTD Tonnage</th><th>MTD Tonnage</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>AP39U00095</td><td>1</td><td>4</td><td>5</td><td>48</td><td>114.09</td><td>1,097.36</td></tr>
-                        <tr><td>AP39U00097</td><td>3</td><td>3</td><td>6</td><td>43</td><td>129.69</td><td>935.31</td></tr>
-                        <!-- ... Add remaining rows as needed ... -->
-                        <tr class="total-row">
-                            <td>Total</td><td>29</td><td>54</td><td>83</td><td>607</td><td>1,890.31</td><td>13,947.96</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Hourly Tipper Movement (simplified) -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Hourly Tipper Movement</h2>
-                <table>
-                    <thead>
-                        <tr><th>Time</th><th>Trips</th><th>Late</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>08-09 AM</td><td>2</td><td class="highlight-red">1</td></tr>
-                        <tr><td>09-10 AM</td><td>2</td><td class="highlight-red">3</td></tr>
-                        <!-- Add more rows as needed -->
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Godown Stock -->
-            <div class="dashboard-box">
-                <h2 class="section-title">Godown Stock</h2>
-                <table>
-                    <thead>
-                        <tr><th>Product</th><th>Stock</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>10 MM</td><td>80</td></tr>
-                        <tr><td>20 MM</td><td>4,100</td></tr>
-                        <tr><td>Rivo Sand</td><td>20,990</td></tr>
-                        <tr><td>Railway Ballast</td><td>795</td></tr>
-                        <tr class="total-row"><td>Total</td><td>44,781</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Dispatch Details -->
-        <div class="dashboard-box" style="margin-top:40px;">
-            <h2 class="section-title">Dispatch Details - 27/01/2026</h2>
-            <table>
-                <thead>
-                    <tr><th>Shift</th><th>10 MM</th><th>20 MM</th><th>V-Sand</th><th>Total (MT)</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>A-Shift</td><td>25</td><td>65</td><td>25</td><td>494</td></tr>
-                    <tr><td>B-Shift</td><td>250</td><td>545</td><td>58</td><td>3,635</td></tr>
-                    <tr class="total-row"><td>Total</td><td>275</td><td>610</td><td>83</td><td>4,129</td></tr>
-                </tbody>
-            </table>
         </div>
     </div>
-
-    <!-- Floating Button -->
-    <a href="https://bimal-bp.github.io/Mapping-part-/" class="floating-btn">Mission</a>
-
+    
+    <script>
+        // Show/Hide Report Function
+        function showReport(reportId) {
+            const miningReport = document.getElementById('mining-report');
+            const plantReport = document.getElementById('plant-report');
+            const miningBtn = document.querySelectorAll('.nav-btn')[0];
+            const plantBtn = document.querySelectorAll('.nav-btn')[1];
+            
+            if (reportId === 'mining') {
+                miningReport.style.display = 'block';
+                plantReport.style.display = 'none';
+                miningBtn.classList.add('active');
+                plantBtn.classList.remove('active');
+            } else if (reportId === 'plant') {
+                miningReport.style.display = 'none';
+                plantReport.style.display = 'block';
+                miningBtn.classList.remove('active');
+                plantBtn.classList.add('active');
+            }
+            
+            // Scroll to top when switching reports
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        
+        // Modal Functions
+        function openModal(modalType) {
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            
+            // Set modal title and content based on modalType
+            let title = '';
+            let content = '';
+            
+            switch(modalType) {
+                case 'trial':
+                    title = 'Trial Details';
+                    content = `
+                        <h3>Trial Performance Metrics</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Trial Parameter</th>
+                                    <th>Value</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Compressor Efficiency</td>
+                                    <td>85%</td>
+                                    <td>90%</td>
+                                    <td><span class="status-badge status-warning">Below Target</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Hole Drilling Rate</td>
+                                    <td>42 holes/hr</td>
+                                    <td>45 holes/hr</td>
+                                    <td><span class="status-badge status-warning">Below Target</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Fuel Consumption</td>
+                                    <td>12.5 L/hour</td>
+                                    <td>13 L/hour</td>
+                                    <td><span class="status-badge status-good">On Target</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 1rem;"><strong>Recommendations:</strong> Optimize compressor scheduling and implement preventive maintenance schedule.</p>
+                    `;
+                    break;
+                    
+                case 'explosive':
+                    title = 'Explosive Data';
+                    content = `
+                        <h3>Explosive Consumption Details</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Explosive Type</th>
+                                    <th>FTD Consumption</th>
+                                    <th>MTD Consumption</th>
+                                    <th>Stock Available</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ANFO</td>
+                                    <td>1,250 kg</td>
+                                    <td>22,500 kg</td>
+                                    <td>5,800 kg</td>
+                                </tr>
+                                <tr>
+                                    <td>Emulsion</td>
+                                    <td>850 kg</td>
+                                    <td>15,800 kg</td>
+                                    <td>3,200 kg</td>
+                                </tr>
+                                <tr>
+                                    <td>Detonators</td>
+                                    <td>120 units</td>
+                                    <td>2,150 units</td>
+                                    <td>850 units</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="margin-top: 1rem; padding: 1rem; background-color: #fff8e1; border-radius: 6px;">
+                            <strong>Safety Note:</strong> All explosive handling procedures are being followed according to safety protocols.
+                        </div>
+                    `;
+                    break;
+                    
+                case 'plantDetails':
+                    title = 'Plant Operation Details';
+                    content = `
+                        <h3>Plant Performance Analysis</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Day Shift</th>
+                                    <th>Night Shift</th>
+                                    <th>Efficiency</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Production Rate</td>
+                                    <td>900 MT</td>
+                                    <td>965 MT</td>
+                                    <td><span class="highlight-green">+7.2%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Running Hours</td>
+                                    <td>5 Hr</td>
+                                    <td>5.2 Hr</td>
+                                    <td><span class="highlight-green">+4%</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Maintenance Hours</td>
+                                    <td>2 Hr</td>
+                                    <td>1.5 Hr</td>
+                                    <td><span class="highlight-green">-25%</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 1rem;"><strong>Key Insight:</strong> Night shift shows better performance in production and maintenance efficiency.</p>
+                    `;
+                    break;
+                    
+                default:
+                    title = 'Detailed Information';
+                    content = `<p>Detailed information for ${modalType} will be displayed here.</p>`;
+            }
+            
+            modalTitle.textContent = title;
+            modalContent.innerHTML = content;
+            modal.style.display = 'flex';
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside content
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target.id === 'modal') {
+                closeModal();
+            }
+        });
+        
+        // Initialize with mining report visible
+        window.onload = function() {
+            showReport('mining');
+        };
+    </script>
 </body>
 </html>
