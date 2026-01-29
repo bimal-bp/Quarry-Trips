@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,28 +45,13 @@
         }
         .dashboard-box {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid #e8ecef;
-            cursor: pointer;
-            transition: transform 0.2s ease;
+            padding: 15px;
+            border: 1px solid #ddd;
         }
-        .dashboard-box:hover {
-            transform: translateY(-5px);
-        }
-        .performance-box { border-top: 5px solid #3498db; }
-        .running-hours-box { border-top: 5px solid #27ae60; }
-        .loading-box { border-top: 5px solid #e74c3c; }
-        .key-parameters-box { border-top: 5px solid #f39c12; }
-        .area-status-box { border-top: 5px solid #9b59b6; }
-        .machinery-box { border-top: 5px solid #16a085; }
         .section-title {
             font-weight: 700;
             font-size: 20px;
             margin-bottom: 18px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
             color: #2c3e50;
             display: flex;
             justify-content: space-between;
@@ -101,12 +86,8 @@
             font-size: 18px;
             text-align: center;
             margin: 12px 0;
-            padding: 12px;
-            background: rgba(30,144,255,0.08);
-            border-radius: 8px;
-            border: 1px solid rgba(30,144,255,0.2);
         }
-        /* Modern Performance Section Styling */
+        /* Simplified Performance Section Styling */
         .performance-metrics {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -114,12 +95,10 @@
             margin-top: 12px;
         }
         .metric-item {
-            background: linear-gradient(135deg, #f8fdff 0%, #f0f8ff 100%);
-            border-radius: 12px;
-            padding: 20px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 15px;
             text-align: center;
-            border: 1px solid #d6eaf8;
-            box-shadow: 0 2px 8px rgba(52,152,219,0.1);
         }
         .metric-title {
             font-size: 20px;
@@ -160,22 +139,13 @@
             flex-wrap: wrap;
         }
         .action-btn {
-            padding: 9px 18px;
-            font-size: 14.5px;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            background: #3498db;
-            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            background: #eee;
+            color: #333;
             cursor: pointer;
-            transition: all 0.3s ease;
             min-width: 140px;
-            box-shadow: 0 2px 6px rgba(52,152,219,0.2);
-        }
-        .action-btn:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(52,152,219,0.3);
         }
         /* Modal */
         .modal {
@@ -191,11 +161,8 @@
         .modal-content {
             background-color: white;
             margin: 4% auto;
-            padding: 28px;
-            border-radius: 12px;
-            width: 94%;
-            max-width: 1280px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            padding: 20px;
+            width: 90%;
         }
         .close {
             position: absolute;
@@ -251,7 +218,7 @@
     </div>
     <div class="dashboard-container">
         <!-- Performance (Modernized) -->
-        <div class="dashboard-box performance-box" id="performance-section" onclick="openPerformanceModal()">
+        <div class="dashboard-box" id="performance-section" onclick="openPerformanceModal()">
             <div class="section-title">
                 Target - 17 Compressor & 1000 Holes
                 <span>📊</span>
@@ -274,7 +241,7 @@
             </div>
         </div>
         <!-- Running Hours -->
-        <div class="dashboard-box running-hours-box" id="running-hours-section" onclick="openRunningHoursModal()">
+        <div class="dashboard-box" id="running-hours-section" onclick="openRunningHoursModal()">
             <div class="section-title">
                 Running Hours
                 <span>⏱️</span>
@@ -292,7 +259,7 @@
             </table>
         </div>
         <!-- Loading -->
-        <div class="dashboard-box loading-box" id="loading-section" onclick="openLoadingModal()">
+        <div class="dashboard-box" id="loading-section" onclick="openLoadingModal()">
             <div class="section-title">
                 Loading Start End Time
                 <span>🚚</span>
@@ -312,7 +279,7 @@
             </table>
         </div>
         <!-- Key Parameters (Now Clickable) -->
-        <div class="dashboard-box key-parameters-box" onclick="openKeyParametersModal()">
+        <div class="dashboard-box" onclick="openKeyParametersModal()">
             <div class="section-title">
                 Key Parameters
                 <span>📈</span>
@@ -333,7 +300,7 @@
             </table>
         </div>
         <!-- Area Wise Compressor Status (Now Clickable) -->
-        <div class="dashboard-box area-status-box" onclick="openAreaStatusModal()">
+        <div class="dashboard-box" onclick="openAreaStatusModal()">
             <div class="section-title">
                 Area Wise Compressor Status
                 <span>🗺️</span>
@@ -354,7 +321,7 @@
             </table>
         </div>
         <!-- Machinery -->
-        <div class="dashboard-box machinery-box" id="machinery-section" onclick="openMachineryModal()">
+        <div class="dashboard-box" id="machinery-section" onclick="openMachineryModal()">
             <div class="section-title">
                 Machinery
                 <span>🔧</span>
@@ -376,7 +343,7 @@
                     <tr><td>Hyundai - rental</td><td class="hmr-combined">152.6 / 163.63</td><td class="text-right">4.6</td><td class="text-right">45 L</td></tr>
                 </tbody>
             </table>
-            <div style="margin-top:20px; padding:14px; background:rgba(22,160,133,0.06); border-left:4px solid #16a085; border-radius:8px; font-size:14px; color:#0e6655;">
+            <div style="margin-top:20px; padding:14px; font-size:14px; color:#0e6655;">
                 Remark: All machinery operating within normal parameters. SGX V-2 showing optimal fuel efficiency.
             </div>
         </div>
@@ -391,7 +358,6 @@
             <button class="action-btn" onclick="openRevenueModal()">Revenue Loss</button>
         </div>
     </div>
-
     <!-- MODALS -->
     <!-- Performance Modal -->
     <div id="performanceModal" class="modal">
@@ -428,12 +394,11 @@
                     </tr>
                 </tbody>
             </table>
-            <div style="margin-top:24px; padding:16px; background:rgba(39,174,96,0.08); border-left:4px solid #27ae60; border-radius:8px; font-size:17px; font-weight:600; text-align:center; color:#1e8449;">
+            <div style="margin-top:24px; padding:16px; font-size:17px; font-weight:600; text-align:center; color:#1e8449;">
                 Compressor Achv 71%  |  Holes Achv 72%
             </div>
         </div>
     </div>
-
     <!-- Running Hours Modal -->
     <div id="runningHoursModal" class="modal">
         <div class="modal-content">
@@ -471,7 +436,6 @@
             </table>
         </div>
     </div>
-
     <!-- Loading Modal -->
     <div id="loadingModal" class="modal">
         <div class="modal-content">
@@ -525,12 +489,11 @@
                     </tr>
                 </tbody>
             </table>
-            <div style="margin-top:24px; padding:16px; background:rgba(52,152,219,0.08); border-left:4px solid #2980b9; border-radius:8px; font-size:17px; font-weight:600; text-align:center; color:#1e6bbf;">
+            <div style="margin-top:24px; padding:16px; font-size:17px; font-weight:600; text-align:center; color:#1e6bbf;">
                 Total trips - 87 , Qty - 2343 Mt
             </div>
         </div>
     </div>
-
     <!-- Machinery Modal -->
     <div id="machineryModal" class="modal">
         <div class="modal-content">
@@ -612,12 +575,11 @@
                     </tr>
                 </tbody>
             </table>
-            <div style="margin-top:28px; padding:18px; background:rgba(22,160,133,0.08); border-left:5px solid #16a085; border-radius:8px; font-size:17px; font-weight:600; text-align:center; color:#0e6655;">
+            <div style="margin-top:28px; padding:18px; font-size:17px; font-weight:600; text-align:center; color:#0e6655;">
                 Total Working Hours: 139.4 hours  |  Total Diesel Consumption: 3,865 liters
             </div>
         </div>
     </div>
-
     <!-- Trial Details Modal -->
     <div id="trialModal" class="modal">
         <div class="modal-content">
@@ -647,7 +609,6 @@
             </table>
         </div>
     </div>
-
     <!-- Explosive Modal -->
     <div id="explosiveModal" class="modal">
         <div class="modal-content">
@@ -726,35 +687,32 @@
                     </tr>
                 </tbody>
             </table>
-            <div style="margin-top:24px; padding:16px; background:rgba(231,76,60,0.08); border-left:4px solid #e74c3c; border-radius:8px; font-size:17px; font-weight:600; text-align:center; color:#c0392b;">
+            <div style="margin-top:24px; padding:16px; font-size:17px; font-weight:600; text-align:center; color:#c0392b;">
                 Total Issued = PG - 16 || DF -233 || WIRE - 14 || ED - 17
             </div>
         </div>
     </div>
-
     <!-- Compressor Modal -->
     <div id="compressorModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeCompressorModal()">×</span>
             <h2 class="modal-title">Compressor Details</h2>
-            <div style="margin-top:24px; padding:18px; background:rgba(52,152,219,0.08); border-left:5px solid #3498db; border-radius:8px; font-size:20px; font-weight:700; text-align:center; color:#2980b9;">
+            <div style="margin-top:24px; padding:18px; font-size:20px; font-weight:700; text-align:center; color:#2980b9;">
                 Total Compressor Placed 245 , with 15800 feets Drilled
                  Payment Till Date: ₹8,96,750
             </div>
         </div>
     </div>
-
     <!-- NMR Modal -->
     <div id="nmrModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeNMRModal()">×</span>
             <h2 class="modal-title">NMR Payment</h2>
-            <div style="margin-top:24px; padding:18px; background:rgba(39,174,96,0.08); border-left:5px solid #27ae60; border-radius:8px; font-size:20px; font-weight:700; text-align:center; color:#1e8449;">
+            <div style="margin-top:24px; padding:18px; font-size:20px; font-weight:700; text-align:center; color:#1e8449;">
                 NMR Payment Till Date: ₹1,12,350
             </div>
         </div>
     </div>
-
     <!-- Revenue Modal -->
     <div id="revenueModal" class="modal">
         <div class="modal-content">
@@ -783,7 +741,6 @@ In addition to this, machinery usage costs and plant running hour payments were 
             </table>
         </div>
     </div>
-
     <!-- New Modal: Date-wise Quarry & Boulder Transport Report -->
     <div id="keyParametersModal" class="modal">
         <div class="modal-content">
@@ -860,7 +817,6 @@ In addition to this, machinery usage costs and plant running hour payments were 
             </table>
         </div>
     </div>
-
     <!-- New Modal: Date-wise Area Wise Compressor Status -->
     <div id="areaStatusModal" class="modal">
         <div class="modal-content">
@@ -954,43 +910,31 @@ In addition to this, machinery usage costs and plant running hour payments were 
             </table>
         </div>
     </div>
-
     <script>
         // Modal functions
         function openPerformanceModal() { document.getElementById('performanceModal').style.display = 'block'; }
         function closePerformanceModal() { document.getElementById('performanceModal').style.display = 'none'; }
-
         function openRunningHoursModal() { document.getElementById('runningHoursModal').style.display = 'block'; }
         function closeRunningHoursModal() { document.getElementById('runningHoursModal').style.display = 'none'; }
-
         function openLoadingModal() { document.getElementById('loadingModal').style.display = 'block'; }
         function closeLoadingModal() { document.getElementById('loadingModal').style.display = 'none'; }
-
         function openMachineryModal() { document.getElementById('machineryModal').style.display = 'block'; }
         function closeMachineryModal() { document.getElementById('machineryModal').style.display = 'none'; }
-
         function openTrialModal() { document.getElementById('trialModal').style.display = 'block'; }
         function closeTrialModal() { document.getElementById('trialModal').style.display = 'none'; }
-
         function openExplosiveModal() { document.getElementById('explosiveModal').style.display = 'block'; }
         function closeExplosiveModal() { document.getElementById('explosiveModal').style.display = 'none'; }
-
         function openCompressorModal() { document.getElementById('compressorModal').style.display = 'block'; }
         function closeCompressorModal() { document.getElementById('compressorModal').style.display = 'none'; }
-
         function openNMRModal() { document.getElementById('nmrModal').style.display = 'block'; }
         function closeNMRModal() { document.getElementById('nmrModal').style.display = 'none'; }
-
         function openRevenueModal() { document.getElementById('revenueModal').style.display = 'block'; }
         function closeRevenueModal() { document.getElementById('revenueModal').style.display = 'none'; }
-
         // New modal functions
         function openKeyParametersModal() { document.getElementById('keyParametersModal').style.display = 'block'; }
         function closeKeyParametersModal() { document.getElementById('keyParametersModal').style.display = 'none'; }
-
         function openAreaStatusModal() { document.getElementById('areaStatusModal').style.display = 'block'; }
         function closeAreaStatusModal() { document.getElementById('areaStatusModal').style.display = 'none'; }
-
         // Close modal when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
